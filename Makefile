@@ -36,7 +36,8 @@ FLAGS += -std=c++98
 # 			$(ALGORITHM_DIR)/al_edges.c\
 # 			$(ALGORITHM_DIR)/al_paths.c\
 
-SOURCES := main.cpp
+SOURCES := main.cpp \
+			class_methods.cpp
 
 # ------------  DIRECTORIES  ------------------------------------------------- #
 
