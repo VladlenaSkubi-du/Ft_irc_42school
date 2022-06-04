@@ -37,6 +37,7 @@ FLAGS += -std=c++98
 # 			$(ALGORITHM_DIR)/al_paths.c\
 
 SOURCES := main.cpp \
+			error_management.cpp #\
 			class_methods.cpp
 
 # ------------  DIRECTORIES  ------------------------------------------------- #

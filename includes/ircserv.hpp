@@ -11,7 +11,15 @@
 #include <netinet/in.h>
 
 #define BUF_SIZE 512 // messages SHALL NOT exceed 512 characters in length
-extern const int	backlog_to_listen = 10;
+// extern const int	backlog_to_listen = 10;
+
+#define PROGRAM_NAME "ircserv"
+#define ERRORS_NUM 3
+enum  error_ircserv {
+	CONFIG_NOFILE = 0,
+	CONFIG_DOUBLICATE,
+	CONFIG_NOKEY
+};
 
 class User {
 	private:
@@ -23,8 +31,8 @@ class User {
   		char	buf_write[BUF_SIZE + 1];
 		User(char *hostname, int port, int socket_fd);
 		~User(void);
-		read_from_tcp();
-		write_to_tcp();
+		// read_from_tcp();
+		// write_to_tcp();
 };
 
 class Channel {
@@ -36,7 +44,7 @@ class Channel {
 	public:
 		Channel(char *name);
 		~Channel(void);
-		add_client_to_channel(int socket_fd);
+		// add_client_to_channel(int socket_fd);
 };
 
 class PrivateChat {
@@ -46,7 +54,7 @@ class PrivateChat {
 	public:
 		PrivateChat(void);
 		~PrivateChat(void);
-		add_client_to_array_of_chats(int first_socket_fd, int second_socket_fd);
+		// add_client_to_array_of_chats(int first_socket_fd, int second_socket_fd);
 };
 
 class Server {
@@ -61,8 +69,11 @@ class Server {
 		Server(void);
 		Server(char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
 		~Server(void);
-		add_channel_to_array_of_channels(Channel *channel);
-		add_chat_to_array_of_chats(PrivateChat *chat);
-}
+		// add_channel_to_array_of_channels(Channel *channel);
+		// add_chat_to_array_of_chats(PrivateChat *chat);
+};
+
+int			errors_management(error_ircserv ertype, std::string argument, bool usage_needed);
+int			irc_usage(void);
 
 #endif
