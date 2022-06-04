@@ -1,7 +1,9 @@
 #include "ircserv.hpp"
 
-void    create_server(Server *irc_server, uint16_t port) {
-    struct rlimit       *resource_limit;
+extern const int	backlog_to_listen = 10;
+
+void    create_server(Server *irc_server) {
+    struct rlimit       resource_limit;
     getrlimit(RLIMIT_NOFILE, &resource_limit);
 
     int                 server_socket;
@@ -10,12 +12,12 @@ void    create_server(Server *irc_server, uint16_t port) {
     struct sockaddr_in  serv_addr;
     memset(&serv_addr, '\0', sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
+	uint16_t port = irc_server->get_server_port();
     serv_addr.sin_port = htons(port);
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     bind(server_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
-    extern const int	backlog_to_listen;
     listen(server_socket, backlog_to_listen);
 
     Server("127.0.0.1", serv_addr.sin_port, 
