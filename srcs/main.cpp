@@ -24,6 +24,7 @@
 
 int main(int argc, char *argv[]) {
     // Server *irc_server = new Server();
+    check_config_file(argc, argv);
     // create_server(irc_server);
     // delete irc_server;
     return (0);

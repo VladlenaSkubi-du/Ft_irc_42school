@@ -2,14 +2,19 @@
 
 int			irc_usage(void) {
 	std::cout << "usage:\n\t./" << PROGRAM_NAME << " config_file\n";
+	std::cout << "\tconfig_file should consist of lines with\n";
+	std::cout << "\tKEY=VALUE\\n\n";
 	return (0);
 }
 
 static std::string	irc_errors_explanation(int sequence_num) {
 	std::string		seq_action[ERRORS_NUM] = {
 		"no configuration file found",
-		"dublication of environmental variable",
-		"no environmental variable found"
+		"duplication of config file, please define one",
+		"can not open configuration file",
+		"wrong line formatting in conguration file",
+		"no environmental variable found",
+		"duplication of environmental variable"
 	};
 	return (seq_action[sequence_num]);
 }

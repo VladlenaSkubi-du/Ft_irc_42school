@@ -14,11 +14,14 @@
 // extern const int	backlog_to_listen = 10;
 
 #define PROGRAM_NAME "ircserv"
-#define ERRORS_NUM 3
+#define ERRORS_NUM 6
 enum  error_ircserv {
 	CONFIG_NOFILE = 0,
-	CONFIG_DOUBLICATE,
-	CONFIG_NOKEY
+	CONFIG_DOUPLICATE_FILE,
+	CONFIG_CANNOT_OPEN,
+	CONFIG_WRONG_FORMAT,
+	CONFIG_NOKEY,
+	CONFIG_DOUBLICATE_KEY,
 };
 
 class User {
@@ -75,5 +78,6 @@ class Server {
 
 int			errors_management(error_ircserv ertype, std::string argument, bool usage_needed);
 int			irc_usage(void);
+int			check_config_file(int argc, char *argv[]);
 
 #endif
