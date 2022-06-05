@@ -14,7 +14,7 @@
 // extern const int	backlog_to_listen = 10;
 
 #define PROGRAM_NAME "ircserv"
-#define ERRORS_NUM 7
+#define ERRORS_NUM 9
 enum  error_ircserv {
 	CONFIG_NOFILE = 0,
 	CONFIG_DOUPLICATE_FILE,
@@ -23,6 +23,8 @@ enum  error_ircserv {
 	CONFIG_NOKEY,
 	CONFIG_DOUBLICATE_KEY,
 	CONFIG_VALUE_INVALID,
+	CONFIG_KEY_EMPTY,
+	CONFIG_VALUE_EMPTY,
 };
 
 #define	CONFIG_VALUES_NB	2
@@ -35,7 +37,7 @@ class ConfigValues {
 		ConfigValues (void);
 		~ConfigValues(void);
 		std::string 	get_value_from_array(const char *key);
-		bool			check_value_by_regexp(size_t index);
+		bool			check_value_by_regexp(size_t index, std::string& value);
 		void			save_value_by_key(std::string key, std::string value);
 };
 

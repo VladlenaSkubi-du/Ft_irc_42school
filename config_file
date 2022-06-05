@@ -1,4 +1,3 @@
 PASSWORD=kjndb1!
-PASSWOR=abc
 #comment
-PORT=123
+PORT=10000

@@ -1,13 +1,15 @@
 #include "ircserv.hpp"
 
-static 	std::string		error_explaination[ERRORS_NUM] = {
+static const std::string		error_explaination[ERRORS_NUM] = {
 		"no configuration file found",
 		"duplication of config file, please define one",
 		"can not open configuration file",
 		"wrong line formatting in conguration file",
 		"environmental variable not found",
 		"duplication of environmental variable",
-		"value should not contain the following"
+		"value should not contain the following",
+		"key is empty, please, comment with # or define",
+		"value for key is empty, please, comment with # or define"
 	};
 
 int			irc_usage(void) {
