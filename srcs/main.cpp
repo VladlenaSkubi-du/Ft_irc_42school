@@ -23,8 +23,10 @@
 // }
 
 int main(int argc, char *argv[]) {
+    ConfigValues config_values;
     // Server *irc_server = new Server();
-    check_config_file(argc, argv);
+    check_config_file(argc, argv, config_values);
+    std::cout << config_values.get_value_from_array("PORT") << std::endl;
     // create_server(irc_server);
     // delete irc_server;
     return (0);
