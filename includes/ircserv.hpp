@@ -3,17 +3,16 @@
 
 #include <iostream>
 #include <cstring>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <sys/types.h>
+// #include <sys/select.h>
+// #include <sys/time.h>
+// #include <sys/types.h>
 #include <unistd.h>
-#include <sys/resource.h>
-#include <netinet/in.h>
 
 #define BUF_SIZE 512 // messages SHALL NOT exceed 512 characters in length
-extern const int		backlog_to_listen;
 
 #define PROGRAM_NAME "ircserv"
+#define USAGE_NOT_PRINTED 0
+#define USAGE_PRINTED 1
 #define ERRORS_NUM 9
 enum  error_ircserv {
 	CONFIG_NOFILE = 0,
@@ -21,13 +20,13 @@ enum  error_ircserv {
 	CONFIG_CANNOT_OPEN,
 	CONFIG_WRONG_FORMAT,
 	CONFIG_NOKEY,
-	CONFIG_DOUBLICATE_KEY,
 	CONFIG_VALUE_INVALID,
 	CONFIG_KEY_EMPTY,
 	CONFIG_VALUE_EMPTY,
+	SERVER_CANNOT_SOCKET,
 };
 
-#define	CONFIG_VALUES_NB	2
+#define	CONFIG_VALUES_NB	3
 class ConfigValues {
 	public:
 		size_t			config_values_nb;
@@ -43,12 +42,12 @@ class ConfigValues {
 
 class User {
 	private:
-		char		*hostname;
-		int			port;
-		int			socket_fd;
+		// char		*hostname;
+		// int			port;
+		// int			socket_fd;
 	public:
-		char	buf_read[BUF_SIZE + 1];
-  		char	buf_write[BUF_SIZE + 1];
+		// char	buf_read[BUF_SIZE + 1];
+  		// char	buf_write[BUF_SIZE + 1];
 		User(char *hostname, int port, int socket_fd);
 		~User(void);
 		// read_from_tcp();
@@ -57,39 +56,40 @@ class User {
 
 class Channel {
 	private:
-		int		id;
-		char    name[51];
-		fd_set  fds_read;
-		fd_set  fds_write;
+		// int		id;
+		// char    name[51];
+		// fd_set  fds_read;
+		// fd_set  fds_write;
 	public:
-		Channel(void) {}
-		Channel(char *name);
-		~Channel(void);
+		// Channel(void) {}
+		// Channel(char *name);
+		// ~Channel(void);
 		// add_client_to_channel(int socket_fd);
 };
 
 class PrivateChat {
 	private:
-		fd_set  *fds_read;
-		fd_set  *fds_write;
+		// fd_set  *fds_read;
+		// fd_set  *fds_write;
 	public:
-		PrivateChat(void);
-		~PrivateChat(void);
+		// PrivateChat(void);
+		// ~PrivateChat(void);
 		// add_client_to_array_of_chats(int first_socket_fd, int second_socket_fd);
 };
 
 class Server {
 	private:
-		char    			*hostname;
+		const char    		*hostname;
 		unsigned short     	port;
 		int					listen_socket;
-		Channel 			channels[3];
-		PrivateChat 		chats[3];
+		// Channel 			channels[3];
+		// PrivateChat 		chats[3];
 	public:
-		intmax_t    fd_capacity;
+		intmax_t    		fd_capacity;
 		Server(void);
-		Server(char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
+		Server(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
 		~Server(void);
+		void	print_server_values(void);
 		// add_channel_to_array_of_channels(Channel *channel);
 		// add_chat_to_array_of_chats(PrivateChat *chat);
 };

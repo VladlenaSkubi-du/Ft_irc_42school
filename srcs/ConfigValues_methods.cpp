@@ -5,53 +5,52 @@ ConfigValues::ConfigValues(void) {
 	//--
 	this->keys[0].assign("PASSWORD");
 	this->regexp[0].assign("");
+	this->values[0].assign("");
 	//--
 	this->keys[1].assign("PORT");
 	this->regexp[1].assign("Aa!\"#$%&\'()*+,-./:;<>=?@[]\\^_{}|~");
+	this->values[1].assign("");
 	//--
-	size_t i = -1;
-	while (++i < CONFIG_VALUES_NB) {
-		this->values[i].assign("");
-	}
+	this->keys[2].assign("HOSTNAME");
+	this->regexp[2].assign("Aa!\"#$%&\'()*+,-/:;<>=?@[]\\^_{}|~");
+	this->values[2].assign("127.0.0.1");
 }
 
 ConfigValues::~ConfigValues(void) { }
 
 std::string	ConfigValues::get_value_from_array(const char *key) {
-	size_t	i = -1;
-	while  (++i < this->config_values_nb) {
+	size_t	i = 0;
+	while  (i < this->config_values_nb) {
 		if (this->keys[i].compare(key) == 0) {
 			break ;
 		}
+		i++;
 	}
-	return(values[i]);
+	return(this->values[i]);
 }
 
 void		ConfigValues::save_value_by_key(std::string key, std::string value) {
 	if (key.empty()) {
-		errors_management(CONFIG_KEY_EMPTY, "", 0);
+		errors_management(CONFIG_KEY_EMPTY, "", USAGE_NOT_PRINTED);
 		exit(1);
 	}
 	if (value.empty()) {
-		errors_management(CONFIG_VALUE_EMPTY, key, 0);
+		errors_management(CONFIG_VALUE_EMPTY, key, USAGE_NOT_PRINTED);
 		exit(1);
 	}
-	size_t	i = -1;
-	while  (++i < this->config_values_nb) {
-		if (this->keys[i].compare(key) == 0) {
+	size_t	i = 0;
+	while  (i < this->config_values_nb) {
+		if (!this->keys[i].compare(key)) {
 			break ;
 		}
+		i++;
 	}
 	if (i == this->config_values_nb) {
-		errors_management(CONFIG_NOKEY, key, 0);
+		errors_management(CONFIG_NOKEY, key, USAGE_NOT_PRINTED);
 		exit(1);
 	}
-	if (this->values[i].empty() == 0) {
-		errors_management(CONFIG_DOUBLICATE_KEY, this->keys[i], 0);
-		exit(1);
-	}
-	if (this->check_value_by_regexp(i, value) == 0) {
-		errors_management(CONFIG_VALUE_INVALID, this->regexp[i], 0);
+	if (!this->check_value_by_regexp(i, value)) {
+		errors_management(CONFIG_VALUE_INVALID, this->regexp[i], USAGE_NOT_PRINTED);
 		exit(1);
 	}
 	this->values[i].assign(value);

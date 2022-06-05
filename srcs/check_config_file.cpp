@@ -11,7 +11,7 @@ int		parse_config_file(std::ifstream& config_file, ConfigValues& config_values) 
 		}
 		std::size_t pos = line.find("=");
 		if (pos == std::string::npos) { 
-			errors_management(CONFIG_WRONG_FORMAT, line, 1);
+			errors_management(CONFIG_WRONG_FORMAT, line, USAGE_PRINTED);
 			exit(1); 
 		}
 		config_values.save_value_by_key(line.substr(0, pos),
@@ -22,17 +22,17 @@ int		parse_config_file(std::ifstream& config_file, ConfigValues& config_values) 
 
 int		check_config_file(int argc, char *argv[], ConfigValues& config_values) {
 	if (argc < 2) {
-		errors_management(CONFIG_NOFILE, "", 1);
+		errors_management(CONFIG_NOFILE, "", USAGE_PRINTED);
 		exit(1);
 	}
 	else if (argc != 2) {
-		errors_management(CONFIG_DOUPLICATE_FILE, "", 1);
+		errors_management(CONFIG_DOUPLICATE_FILE, "", USAGE_PRINTED);
 		exit(1);
 	}
 	std::ifstream config_file;
 	config_file.open(argv[1], std::ifstream::in);
 	if (!config_file) {
-		errors_management(CONFIG_CANNOT_OPEN, argv[1], 0);
+		errors_management(CONFIG_CANNOT_OPEN, argv[1], USAGE_NOT_PRINTED);
 		exit(1);
 	}
 	parse_config_file(config_file, config_values);

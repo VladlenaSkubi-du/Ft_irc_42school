@@ -4,3 +4,4 @@ objs
 *.o
 bircd
 .vscode
+*.dSYM

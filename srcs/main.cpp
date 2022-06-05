@@ -1,45 +1,72 @@
 #include "ircserv.hpp"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <cstdlib>
 
-extern const int	backlog_to_listen = 10;
+#define	DEFAULT_SOFT_LIMIT 8
+#define DEFAULT_HARD_LIMIT 16
 
-void    create_server(Server *irc_server) {
-    struct rlimit       resource_limit;
-    getrlimit(RLIMIT_NOFILE, &resource_limit);
+static void	listen_server_socket(int& server_socket) {
+	const int	backlog_to_listen = 10;
+	if (listen(server_socket, backlog_to_listen)) {
+		errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED);
+		exit(1);
+	}
+}
 
-    int                 server_socket;
-    server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+static void	make_server_socket_tcp(int& server_socket, struct sockaddr_in&  serv_addr) {
+	if (bind(server_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) {
+		errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED);
+		exit(1);
+	}
+}
 
-    struct sockaddr_in  serv_addr;
-    memset(&serv_addr, '\0', sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-	uint16_t port = irc_server->get_server_port();
-    serv_addr.sin_port = htons(port);
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+static void	define_tcp_parameters(struct sockaddr_in& serv_addr, ConfigValues& config_values) {
+	memset(&serv_addr, '\0', sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	uint16_t port = static_cast<uint16_t>(atoi(config_values.get_value_from_array("PORT").c_str()));
+	serv_addr.sin_port = htons(port);
+	inet_aton(config_values.get_value_from_array("HOSTNAME").c_str(), &serv_addr.sin_addr);
+}
 
-    bind(server_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+static int	create_server_socket_with_type_tcp(void) {
+	int  server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (server_socket == -1) {
+		errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED);
+		exit(1);
+	}
+	return(server_socket);
+}
 
-    listen(server_socket, backlog_to_listen);
+static void	get_system_limits_of_fd_number(struct rlimit& resource_limit) {
+	if (getrlimit(RLIMIT_NOFILE, &resource_limit)) {
+		resource_limit.rlim_cur = DEFAULT_SOFT_LIMIT;
+		resource_limit.rlim_max = DEFAULT_HARD_LIMIT;
+	}
+}
 
-    Server("127.0.0.1", serv_addr.sin_port, 
-        static_cast<intmax_t>(resource_limit.rlim_cur), server_socket);
+void    create_server(Server *irc_server, ConfigValues& config_values) {
+
+	struct rlimit  resource_limit;
+	get_system_limits_of_fd_number(resource_limit);
+	int server_socket = create_server_socket_with_type_tcp();
+
+	struct sockaddr_in  serv_addr;
+	define_tcp_parameters(serv_addr, config_values);
+	make_server_socket_tcp(server_socket, serv_addr);
+	listen_server_socket(server_socket);
+
+	irc_server = new Server(config_values.get_value_from_array("HOSTNAME").c_str(), ntohs(serv_addr.sin_port), 
+		static_cast<intmax_t>(resource_limit.rlim_cur), server_socket);
+	irc_server->print_server_values();
 }
 
 int main(int argc, char *argv[]) {
-    ConfigValues config_values;
-    // Server *irc_server = new Server();
-    check_config_file(argc, argv, config_values);
-    std::cout << config_values.get_value_from_array("PORT") << std::endl;
-    // create_server(irc_server);
-    // delete irc_server;
-    return (0);
+	ConfigValues config_values;
+	check_config_file(argc, argv, config_values);
+	Server *irc_server = NULL;
+	create_server(irc_server, config_values);
+	delete irc_server;
+	return (0);
 }
-
-// можно сохранить каждый ключ в array структур:
-// key, value
-// key проверять по структуре с ключами и regexp
-// value проверять по regexp
-// структуру создать с id, key и regexp, bool
-// создать массив сразу и распределять в ячейку по id найденный ключ
-// если пытаемся положить по id (индексу), которого нет - такой настройки не существует
-// если пытаемся положить по id, который уже занят - дубликат ключа
-// если нет обязательного id - недостаточно информации
