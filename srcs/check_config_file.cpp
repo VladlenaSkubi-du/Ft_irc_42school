@@ -14,7 +14,8 @@ int		parse_config_file(std::ifstream& config_file, ConfigValues& config_values) 
 			errors_management(CONFIG_WRONG_FORMAT, line, 1);
 			exit(1); 
 		}
-		config_values.save_value_by_key(line.substr(0, pos), line.substr(pos + 1,line.size() - pos - 1));
+		config_values.save_value_by_key(line.substr(0, pos),
+										line.substr(pos + 1, line.size() - pos - 1));
 	}
 	return (0);
 }
