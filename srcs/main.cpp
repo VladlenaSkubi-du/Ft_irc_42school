@@ -25,8 +25,21 @@ void    create_server(Server *irc_server) {
 }
 
 int main(int argc, char *argv[]) {
-    Server *irc_server = new Server();
-    create_server(irc_server);
-    delete irc_server;
+    ConfigValues config_values;
+    // Server *irc_server = new Server();
+    check_config_file(argc, argv, config_values);
+    std::cout << config_values.get_value_from_array("PORT") << std::endl;
+    // create_server(irc_server);
+    // delete irc_server;
     return (0);
 }
+
+// можно сохранить каждый ключ в array структур:
+// key, value
+// key проверять по структуре с ключами и regexp
+// value проверять по regexp
+// структуру создать с id, key и regexp, bool
+// создать массив сразу и распределять в ячейку по id найденный ключ
+// если пытаемся положить по id (индексу), которого нет - такой настройки не существует
+// если пытаемся положить по id, который уже занят - дубликат ключа
+// если нет обязательного id - недостаточно информации
