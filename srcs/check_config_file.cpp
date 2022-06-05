@@ -6,6 +6,9 @@ int		parse_config_file(std::ifstream& config_file) {
 	std::string line;
 	while (std::getline(config_file, line))
 	{
+		if (line[0] == '#') {
+			continue ;
+		}
 		if (line.find("=") == std::string::npos) { 
 			errors_management(CONFIG_WRONG_FORMAT, line, 1);
 			exit(1); 

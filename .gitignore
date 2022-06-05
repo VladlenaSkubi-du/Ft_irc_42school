@@ -3,3 +3,4 @@ ircserv
 objs
 *.o
 bircd
+.vscode
