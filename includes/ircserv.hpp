@@ -95,7 +95,8 @@ class Server {
 };
 
 int			errors_management(error_ircserv ertype, std::string argument, bool usage_needed);
-int			irc_usage(void);
-int			check_config_file(int argc, char *argv[], ConfigValues& config_values);
+void		irc_usage(void);
+void    	create_server(Server *irc_server, ConfigValues& config_values);
+void		check_config_file(int argc, char *argv[], ConfigValues& config_values);
 
 #endif

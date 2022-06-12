@@ -39,6 +39,7 @@ FLAGS += -std=c++98
 SOURCES := main.cpp \
 			error_management.cpp \
 			check_config_file.cpp \
+			create_server.cpp \
 			ConfigValues_methods.cpp \
 			Server_methods.cpp
 

@@ -12,13 +12,12 @@ static const std::string		error_explaination[ERRORS_NUM] = {
 		"can not create socket for server"
 	};
 
-int			irc_usage(void) {
+void		irc_usage(void) {
 	std::cout << "usage:\n\t./" << PROGRAM_NAME << " config_file\n" <<
 		"\tconfig_file should consist of lines with\n" <<
 		"\tKEY=VALUE\\n\n" <<
 		"\tobligatory: PASSWORD, PORT" <<
 		"\toptional: HOSTNAME\n";
-	return (0);
 }
 
 int					errors_management(error_ircserv ertype, std::string argument, bool usage_needed) {
@@ -26,9 +25,9 @@ int					errors_management(error_ircserv ertype, std::string argument, bool usage
 	if (!argument.empty()) {
 		std::cerr << ": " << argument;
 	}
-	std::cout << "\n";
+	std::cout << std::endl;
 	if (usage_needed) {
 		irc_usage();
 	}
-	return (1);
+	return (static_cast<int>(ertype));
 }
