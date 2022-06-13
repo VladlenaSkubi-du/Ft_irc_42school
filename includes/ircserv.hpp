@@ -3,9 +3,6 @@
 
 #include <iostream>
 #include <cstring>
-// #include <sys/select.h>
-// #include <sys/time.h>
-// #include <sys/types.h>
 #include <unistd.h>
 
 #define BUF_SIZE 512 // messages SHALL NOT exceed 512 characters in length
@@ -42,13 +39,12 @@ class ConfigValues {
 
 class User {
 	private:
-		// char		*hostname;
 		// int			port;
 		// int			socket_fd;
 	public:
 		// char	buf_read[BUF_SIZE + 1];
   		// char	buf_write[BUF_SIZE + 1];
-		User(char *hostname, int port, int socket_fd);
+		User(int port, int socket_fd);
 		~User(void);
 		// read_from_tcp();
 		// write_to_tcp();

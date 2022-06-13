@@ -27,11 +27,6 @@ static void	define_tcp_parameters(struct sockaddr_in& serv_addr, ConfigValues& c
 	inet_aton(config_values.get_value_from_array("HOSTNAME").c_str(), &serv_addr.sin_addr);
 }
 
-static void	make_server_socket_nonblocking(int& server_socket) {
-	if (fcntl(server_socket, F_SETFL, O_NONBLOCK) < 0)
-		exit(errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED));
-}
-
 static int	create_server_socket_with_type_tcp(void) {
 	int  server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (server_socket == -1)
@@ -51,7 +46,6 @@ void    create_server(Server *irc_server, ConfigValues& config_values) {
 	struct rlimit  resource_limit;
 	get_system_limits_of_fd_number(resource_limit);
 	int server_socket = create_server_socket_with_type_tcp();
-	make_server_socket_nonblocking(server_socket);
 
 	struct sockaddr_in  serv_addr;
 	define_tcp_parameters(serv_addr, config_values);
@@ -60,5 +54,5 @@ void    create_server(Server *irc_server, ConfigValues& config_values) {
 
 	irc_server = new Server(config_values.get_value_from_array("HOSTNAME").c_str(), ntohs(serv_addr.sin_port), 
 		static_cast<intmax_t>(resource_limit.rlim_cur), server_socket);
-	irc_server->print_server_values();
+	irc_server->print_server_values(); // TO delete
 }
