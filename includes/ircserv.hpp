@@ -74,7 +74,7 @@ class PrivateChat {
 		// add_client_to_array_of_chats(int first_socket_fd, int second_socket_fd);
 };
 
-class Server {
+class MainServer {
 	private:
 		const char    		*hostname;
 		unsigned short     	port;
@@ -83,9 +83,9 @@ class Server {
 		// PrivateChat 		chats[3];
 	public:
 		intmax_t    		fd_capacity;
-		Server(void);
-		Server(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
-		~Server(void);
+		MainServer(void);
+		MainServer(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
+		~MainServer(void);
 		void	print_server_values(void);
 		// add_channel_to_array_of_channels(Channel *channel);
 		// add_chat_to_array_of_chats(PrivateChat *chat);
@@ -93,7 +93,7 @@ class Server {
 
 int			errors_management(error_ircserv ertype, std::string argument, bool usage_needed);
 void		irc_usage(void);
-void    	create_server(Server *irc_server, ConfigValues& config_values);
+void    	create_server(MainServer *irc_server, ConfigValues& config_values);
 void		check_config_file(int argc, char *argv[], ConfigValues& config_values);
 
 #endif

@@ -1,22 +1,22 @@
 #include "ircserv.hpp"
 
-Server::Server(void) {}
+MainServer::MainServer(void) {}
 
-Server::Server(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket) {
+MainServer::MainServer(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket) {
     this->hostname = hostname;
     this->port = port;
     this->fd_capacity = fd_capacity;
     this->listen_socket = listen_socket;
 }
 
-Server::~Server(void) {}
+MainServer::~MainServer(void) {}
 
-void    Server::print_server_values(void) {
-    std::cout << "Server values:\n" <<
+void    MainServer::print_server_values(void) {
+    std::cout << "MainServer values:\n" <<
         "\tHost IP is " << this->hostname << std::endl <<
         "\tPort is " << this->port << std::endl <<
         "\tSystem allows " << this->fd_capacity << " number of fds" << std::endl <<
-        "\tServer listens to fd number " << this->listen_socket << std::endl;
+        "\tMainServer listens to fd number " << this->listen_socket << std::endl;
 }
 
 // Channel::Channel(char *name) {

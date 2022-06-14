@@ -41,7 +41,7 @@ SOURCES := main.cpp \
 			check_config_file.cpp \
 			create_server.cpp \
 			ConfigValues_methods.cpp \
-			Server_methods.cpp
+			MainServer_methods.cpp
 
 # ------------  DIRECTORIES  ------------------------------------------------- #
 

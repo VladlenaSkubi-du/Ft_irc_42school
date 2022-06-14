@@ -14,7 +14,7 @@
 int main(int argc, char *argv[]) {
 	ConfigValues config_values;
 	check_config_file(argc, argv, config_values);
-	Server *irc_server = NULL;
+	MainServer *irc_server = NULL;
 	create_server(irc_server, config_values);
 
 	// int	server_state = SERVER_WORKS;

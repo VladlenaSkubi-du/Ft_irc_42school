@@ -45,7 +45,7 @@ static void	get_system_limits_of_fd_number(struct rlimit& resource_limit) {
 	}
 }
 
-void    create_server(Server *irc_server, ConfigValues& config_values) {
+void    create_server(MainServer *irc_server, ConfigValues& config_values) {
 
 	struct rlimit  resource_limit;
 	get_system_limits_of_fd_number(resource_limit);
@@ -56,7 +56,7 @@ void    create_server(Server *irc_server, ConfigValues& config_values) {
 	make_server_socket_tcp(server_socket, serv_addr);
 	listen_server_socket(server_socket);
 
-	irc_server = new Server(config_values.get_value_from_array("HOSTNAME").c_str(), ntohs(serv_addr.sin_port), 
+	irc_server = new MainServer(config_values.get_value_from_array("HOSTNAME").c_str(), ntohs(serv_addr.sin_port), 
 		static_cast<intmax_t>(resource_limit.rlim_cur), server_socket);
 	irc_server->print_server_values(); // TO delete
 }
