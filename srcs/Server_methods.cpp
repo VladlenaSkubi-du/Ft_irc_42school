@@ -13,10 +13,10 @@ Server::~Server(void) {}
 
 void    Server::print_server_values(void) {
     std::cout << "Server values:\n" <<
-        "\tHostname is " << this->hostname << std::endl <<
+        "\tHost IP is " << this->hostname << std::endl <<
         "\tPort is " << this->port << std::endl <<
         "\tSystem allows " << this->fd_capacity << " number of fds" << std::endl <<
-        "\tServer listens to socket number " << this->listen_socket << std::endl;
+        "\tServer listens to fd number " << this->listen_socket << std::endl;
 }
 
 // Channel::Channel(char *name) {

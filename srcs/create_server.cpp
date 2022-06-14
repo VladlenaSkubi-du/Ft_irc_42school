@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <cstdlib>
 #include <fcntl.h>
+#include <netdb.h>
 
 #define	DEFAULT_SOFT_LIMIT 8
 #define DEFAULT_HARD_LIMIT 16
@@ -24,7 +25,10 @@ static void	define_tcp_parameters(struct sockaddr_in& serv_addr, ConfigValues& c
 	serv_addr.sin_family = AF_INET;
 	uint16_t port = static_cast<uint16_t>(atoi(config_values.get_value_from_array("PORT").c_str()));
 	serv_addr.sin_port = htons(port);
-	inet_aton(config_values.get_value_from_array("HOSTNAME").c_str(), &serv_addr.sin_addr);
+	hostent *hostname = gethostbyname(config_values.get_value_from_array("HOSTNAME").c_str());
+	if (!hostname)
+		exit(errors_management(SERVER_NO_HOSTIP, config_values.get_value_from_array("HOSTNAME").c_str(), USAGE_NOT_PRINTED));
+	inet_aton(hostname->h_name, &serv_addr.sin_addr);
 }
 
 static int	create_server_socket_with_type_tcp(void) {

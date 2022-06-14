@@ -9,6 +9,7 @@ static const std::string		error_explaination[ERRORS_NUM] = {
 		"value should not contain the following",
 		"key is empty, please, comment with # or define",
 		"value for key is empty, please, comment with # or define",
+		"host IP stated is unavailable",
 		"can not create socket for server"
 	};
 
