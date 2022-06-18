@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
+#include <vector>
 
 #define BUF_SIZE 512 // messages SHALL NOT exceed 512 characters in length
 
@@ -24,19 +25,46 @@ enum  error_ircserv {
 	SERVER_CANNOT_SOCKET,
 };
 
-#define	CONFIG_VALUES_NB	3
 class ConfigValues {
+	private:
+		struct			config_value_ {
+			std::string		keys_;
+			std::string		regexp_;
+			std::string		values_;
+		};
 	public:
-		size_t			config_values_nb;
-		std::string		keys[CONFIG_VALUES_NB];
-		std::string		regexp[CONFIG_VALUES_NB];
-		std::string		values[CONFIG_VALUES_NB];
+		std::vector<struct config_value_>	config_values_;
 		ConfigValues (void);
 		~ConfigValues(void);
-		std::string 	get_value_from_array(const char *key);
-		bool			check_value_by_regexp(size_t index, std::string& value);
-		void			save_value_by_key(std::string key, std::string value);
+		const std::string& 	get_value_from_array(const char *key) const;
+		void			save_value_by_key(const std::string& key, const std::string& value);
+		bool			check_value_by_regexp(const size_t index, const std::string& value) const;
 };
+
+class FD {
+	public:
+		FD(void) { };
+		~FD(void) { };
+};
+
+class MainServer {
+	private:
+		const char    		*hostname_;
+		unsigned short     	port_;
+		int					listen_socket_;
+		// Channel 			channels[3];
+		// PrivateChat 		chats[3];
+	public:
+		intmax_t    		fd_capacity_;
+		FD					*fds_array_;
+		//MainServer(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
+		MainServer(const ConfigValues& config_values);
+		~MainServer(void);
+		void	print_server_values(void);
+		// add_channel_to_array_of_channels(Channel *channel);
+		// add_chat_to_array_of_chats(PrivateChat *chat);
+};
+
 
 class User {
 	private:
@@ -74,22 +102,6 @@ class PrivateChat {
 		// add_client_to_array_of_chats(int first_socket_fd, int second_socket_fd);
 };
 
-class MainServer {
-	private:
-		const char    		*hostname;
-		unsigned short     	port;
-		int					listen_socket;
-		// Channel 			channels[3];
-		// PrivateChat 		chats[3];
-	public:
-		intmax_t    		fd_capacity;
-		MainServer(void);
-		MainServer(const char *hostname, unsigned short port, intmax_t fd_capacity, int listen_socket);
-		~MainServer(void);
-		void	print_server_values(void);
-		// add_channel_to_array_of_channels(Channel *channel);
-		// add_chat_to_array_of_chats(PrivateChat *chat);
-};
 
 int			errors_management(error_ircserv ertype, std::string argument, bool usage_needed);
 void		irc_usage(void);
