@@ -1,4 +1,6 @@
-#include "ircserv.hpp"
+#include "IrcServer.hpp"
+#include "ConfigValues.hpp"
+#include "debug.hpp"
 
 ConfigValues::ConfigValues(void) {
 	struct config_value_ tmp;

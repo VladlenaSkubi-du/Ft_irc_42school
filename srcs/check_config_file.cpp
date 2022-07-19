@@ -1,6 +1,8 @@
-#include "ircserv.hpp"
 #include <fstream>
 #include <sstream>
+#include "ConfigValues.hpp"
+#include "debug.hpp"
+
 
 static void		parse_config_file(std::ifstream& config_file, ConfigValues& config_values) {
 	std::string line;

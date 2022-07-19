@@ -1,4 +1,4 @@
-#include "ircserv.hpp"
+#include "IrcServer.hpp"
 
 #define SERVER_WORKS 1
 #define SERVER_TERMINATED -1
@@ -14,7 +14,7 @@
 int main(int argc, char *argv[]) {
 	ConfigValues config_values;
 	check_config_file(argc, argv, config_values);
-	MainServer irc_server(config_values);
+	IrcServer irc_server(config_values);
 
 	// int	server_state = SERVER_WORKS;
 	// signal(SIGINT, terminate_server);

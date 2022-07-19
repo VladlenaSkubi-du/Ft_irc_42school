@@ -1,10 +1,5 @@
-#include "ircserv.hpp"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <cstdlib>
-#include <fcntl.h>
-#include <netdb.h>
+#include "IrcServer.hpp"
+#include "debug.hpp"
 
 namespace {
     const int     DEFAULT_SOFT_LIMIT = 8;
@@ -47,7 +42,7 @@ namespace {
     }
 }
 
-MainServer::MainServer(const ConfigValues& config_values) {
+IrcServer::IrcServer(const ConfigValues& config_values) {
     struct rlimit  resource_limit;
 	get_system_limits_of_fd_number(resource_limit);
 	int server_socket = create_server_socket_with_type_tcp();
@@ -59,22 +54,22 @@ MainServer::MainServer(const ConfigValues& config_values) {
 
     hostname_ = config_values.get_value_from_array("HOSTNAME").c_str();
     port_ = ntohs(serv_addr.sin_port);
-    fd_capacity_ = static_cast<intmax_t>(resource_limit.rlim_cur);
+    fd_capacity_ = static_cast<unsigned long long int>(resource_limit.rlim_cur);
     listen_socket_ = server_socket;
     fds_array_ = new FD[fd_capacity_];
 	print_server_values();
 }
 
-MainServer::~MainServer(void) {
+IrcServer::~IrcServer(void) {
     delete [] fds_array_;
 }
 
-void    MainServer::print_server_values(void) {
-    std::cout << "MainServer values:\n" <<
+void    IrcServer::print_server_values(void) {
+    std::cout << "IrcServer values:\n" <<
         "\tHost IP is " << hostname_ << std::endl <<
         "\tPort is " << port_ << std::endl <<
         "\tSystem allows " << fd_capacity_ << " number of fds" << std::endl <<
-        "\tMainServer listens to fd number " << listen_socket_ << std::endl;
+        "\tIrcServer listens to fd number " << listen_socket_ << std::endl;
 }
 
 // Channel::Channel(char *name) {

@@ -1,4 +1,4 @@
-#include "ircserv.hpp"
+#include "debug.hpp"
 
 static const std::string		error_explaination[ERRORS_NUM] = {
 		"no configuration file found",

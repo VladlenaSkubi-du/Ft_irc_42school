@@ -1,6 +1,6 @@
-#include "ircserv.hpp"
+#include "IrcServer.hpp"
 
-int     accept_client(MainServer::MainServer *irc_server) {
+int     accept_client(IrcServer::IrcServer *irc_server) {
     
     return (0);
 }
