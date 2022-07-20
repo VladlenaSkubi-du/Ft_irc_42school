@@ -21,5 +21,5 @@ enum ErrorType {
 	SERVER_CANT_CREATE_USER
 };
 
-int			errors_management(ErrorType ertype, std::string argument, bool usage_needed);
+int			errors_management(ErrorType ertype, const std::string &argument, bool usage_needed);
 void		usage(void);

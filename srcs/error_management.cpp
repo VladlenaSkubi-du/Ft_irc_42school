@@ -23,7 +23,7 @@ void		usage(void) {
 		"\toptional: HOSTNAME\n";
 }
 
-int					errors_management(ErrorType ertype, std::string argument, bool usage_needed) {
+int					errors_management(ErrorType ertype, const std::string &argument, bool usage_needed) {
 	std::cerr << PROGRAM_NAME << ": " << error_explaination[static_cast<int>(ertype)];
 	if (!argument.empty()) {
 		std::cerr << ": " << argument;

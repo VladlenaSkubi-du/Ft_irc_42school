@@ -47,26 +47,25 @@ void		ConfigValues::save_value_by_key(const std::string& key, const std::string&
 		exit(errors_management(CONFIG_NOKEY, key, USAGE_NOT_PRINTED));
 	if (!check_value_by_regexp(i, value)) {
 		std::cout << key << std::endl;
-		exit(errors_management(CONFIG_VALUE_INVALID, config_values_[i].regexp_, USAGE_NOT_PRINTED));
+		exit(errors_management(CONFIG_VALUE_INVALID, config_values_[i].regexp_ + " in value [" + value + "]", USAGE_NOT_PRINTED));
 	}
 	config_values_[i].values_.assign(value);
 	std::cout << "\t" << config_values_[i].keys_ << " is " << config_values_[i].values_ << std::endl;
 }
 
 bool		ConfigValues::check_value_by_regexp(const std::size_t index, const std::string& value) const {
-	if (config_values_[index].regexp_.empty()) {
-		return (true);
-	}
-	std::size_t		j = 0;
-	std::size_t		k = 0;
-	for ( ; j != config_values_[index].regexp_.size(); j++ ) {
-		for (k = 0; k != value.size(); k++ ) {
-            if ((config_values_[index].regexp_[j] == 'A' && value[k] >= 'A' && value[k] <= 'Z') ||
-					(config_values_[index].regexp_[j] == 'a' && value[k] >= 'a' && value[k] <= 'z') ||
-					(config_values_[index].regexp_[j] == '0' && value[k] >= '0' && value[k] <= '9') ||
-                	(config_values_[index].values_[k] == config_values_[index].regexp_[j]))
+	if (config_values_[index].regexp_.empty())
+		return true;
+	for (std::size_t j = 0; j != config_values_[index].regexp_.size(); j++) {
+		const std::string &regexp = config_values_[index].regexp_;
+		for (std::size_t k = 0; k != value.size(); k++ ) {
+			unsigned char c = value[k];
+            if ((regexp[j] == 'A' && std::isupper(c)) ||
+					(regexp[j] == 'a' && std::islower(c)) ||
+					(regexp[j] == '0' && std::isdigit(c)) ||
+                	(regexp[j] == value[k]))
 				return false;
 		}
 	}
-	return (true);
+	return true;
 }
