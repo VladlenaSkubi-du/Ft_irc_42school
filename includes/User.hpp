@@ -4,23 +4,23 @@
 
 class User{
     public:
-        User(std::string nickname, std::string name, std::string password, size_t index_io) : 
-            nickname_(nickname), name_(name), paswword_(password), indexIoBuff_(index) {};
+        User(std::string nickname, std::string name, std::string password, std::size_t index_io, std::size_t id) : 
+            nickname_(nickname), name_(name), password_(password), indexIoBuff_(index_io), id_(id) {};
         ~User() {};
 
-        void setNickname(const std::string &nickname) { nickname_(nickname) };
-        void setName(const std::string &name) { name_(name) };
-        void setPassword(const std::string &password) { password_(password) };
+        void setNickname(const std::string &nickname) { nickname_.assign(nickname); };
+        void setName(const std::string &name) { name_.assign(name); };
+        void setPassword(const std::string &password) { password_.assign(password); };
 
-        const std::string &getNickname(void) { return nickname_; };
-        const std::string &getName(void) { return name_; };
-        const std::string &getPassword(void) { return password_; };
-        size_t             getIndexIO(void) { return indexIoBuff_; };
-        size_t             getId(void) { return id_; };
+        const std::string       &getNickname(void) { return nickname_; };
+        const std::string       &getName(void) { return name_; };
+        const std::string       &getPassword(void) { return password_; };
+        std::size_t             getIndexIO(void) { return indexIoBuff_; };
+        std::size_t             getId(void) { return id_; };
     private:
-        std::string     nickname_;
-        std::string     name_;
-        std::string     password_;
-        size_t          indexIoBuff_;
-        size_t          id_;
+        std::string             nickname_;
+        std::string             name_;
+        std::string             password_;
+        std::size_t             indexIoBuff_;
+        std::size_t             id_;
 };

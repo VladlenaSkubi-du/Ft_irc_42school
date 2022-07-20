@@ -23,7 +23,7 @@ ConfigValues::ConfigValues(void) {
 ConfigValues::~ConfigValues(void) { }
 
 const std::string&	ConfigValues::get_value_from_array(const char *key) const {
-	for (size_t i = 0; i < config_values_.size(); i++ ) {
+	for (std::size_t i = 0; i < config_values_.size(); i++ ) {
 		if (config_values_[i].keys_.compare(key) == 0) {
 			return (config_values_[i].values_);
 		}
@@ -36,7 +36,7 @@ void		ConfigValues::save_value_by_key(const std::string& key, const std::string&
 		exit(errors_management(CONFIG_KEY_EMPTY, "", USAGE_NOT_PRINTED));
 	if (value.empty())
 		exit(errors_management(CONFIG_VALUE_EMPTY, key, USAGE_NOT_PRINTED));
-	size_t	i = 0;
+	std::size_t	i = 0;
 	for ( ; i < config_values_.size(); i++ ) {
 		if (config_values_[i].keys_.compare(key) == 0) {
 			break ;
@@ -53,12 +53,12 @@ void		ConfigValues::save_value_by_key(const std::string& key, const std::string&
 	std::cout << "\t" << config_values_[i].keys_ << " is " << config_values_[i].values_ << std::endl;
 }
 
-bool		ConfigValues::check_value_by_regexp(const size_t index, const std::string& value) const {
+bool		ConfigValues::check_value_by_regexp(const std::size_t index, const std::string& value) const {
 	if (config_values_[index].regexp_.empty()) {
 		return (true);
 	}
-	size_t		j = 0;
-	size_t		k = 0;
+	std::size_t		j = 0;
+	std::size_t		k = 0;
 	for ( ; j != config_values_[index].regexp_.size(); j++ ) {
 		for (k = 0; k != value.size(); k++ ) {
             if ((config_values_[index].regexp_[j] == 'A' && value[k] >= 'A' && value[k] <= 'Z') ||

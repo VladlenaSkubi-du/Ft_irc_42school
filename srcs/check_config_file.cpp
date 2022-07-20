@@ -27,7 +27,7 @@ void	check_config_file(int argc, char *argv[], ConfigValues& config_values) {
 	std::ifstream config_file;
 	config_file.open(argv[1], std::ifstream::in);
 	if (!config_file)
-		exit(errors_management(CONFIG_CANNOT_OPEN, argv[1], USAGE_NOT_PRINTED));
+		exit(errors_management(CONFIG_CANT_OPEN, argv[1], USAGE_NOT_PRINTED));
 	parse_config_file(config_file, config_values);
 	config_file.close();
 }

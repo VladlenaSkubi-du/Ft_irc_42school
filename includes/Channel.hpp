@@ -3,16 +3,20 @@
 #include <vector>
 #include "User.hpp"
 
+class IrcServer;
+
 class Channel{
     public:
-        Channel(const IrcServer &irc_server, size_t operator_id, const std::string &channel_name) :
-            channelName_(channel_name), operator_(operator), users_(operator), channelId_(irc_server.getNewChannelId());
+        Channel(std::size_t channel_id, const User &channel_operator, const std::string &channel_name) :
+            channelName_(channel_name), channelOperator_(channel_operator), channelId_(channel_id) {
+                users_.push_back(channel_operator);
+            };
         ~Channel() {};
-        int     addUser(const IrcServer &irc_server, size_t user_id) { return 0 };
-        int     removeUser(const IrcServer &irc_server, size_t user_id) { return 0 };
+        int     addUser(const User &channel_member);
+        int     removeUser(const User &channel_member);
     private:
-        std::string                     channelName_;
-        const User                      &operator_;
-        std::vector<size_t>             users_;
-        size_t                          channelId_;
+        std::string                         channelName_;
+        const User                          &channelOperator_;
+        std::vector<User>                   users_;
+        std::size_t                         channelId_;
 };

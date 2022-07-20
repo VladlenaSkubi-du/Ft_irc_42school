@@ -8,12 +8,12 @@ namespace {
     void	listen_server_socket(int& server_socket) {
 	    const int	backlog_to_listen = 10;
 	    if (listen(server_socket, backlog_to_listen))
-	    	exit(errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED));
+	    	exit(errors_management(SERVER_CANT_SOCKET, "", USAGE_NOT_PRINTED));
     }
 
     void	make_server_socket_tcp(int& server_socket, struct sockaddr_in&  serv_addr) {
     	if (bind(server_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr)))
-    		exit(errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED));
+    		exit(errors_management(SERVER_CANT_SOCKET, "", USAGE_NOT_PRINTED));
     }
 
     void	define_tcp_parameters(struct sockaddr_in& serv_addr, const ConfigValues& config_values) {
@@ -30,7 +30,7 @@ namespace {
     int	create_server_socket_with_type_tcp(void) {
     	int  server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     	if (server_socket == -1)
-    		exit(errors_management(SERVER_CANNOT_SOCKET, "", USAGE_NOT_PRINTED));
+    		exit(errors_management(SERVER_CANT_SOCKET, "", USAGE_NOT_PRINTED));
     	return(server_socket);
     }
 
@@ -54,7 +54,7 @@ IrcServer::IrcServer(const ConfigValues& config_values) {
 
     hostname_ = config_values.get_value_from_array("HOSTNAME").c_str();
     port_ = ntohs(serv_addr.sin_port);
-    fd_capacity_ = static_cast<unsigned long long int>(resource_limit.rlim_cur);
+    fd_capacity_ = static_cast<std::size_t>(resource_limit.rlim_cur);
     listen_socket_ = server_socket;
     fds_array_ = new FD[fd_capacity_];
 	print_server_values();
@@ -71,6 +71,25 @@ void    IrcServer::print_server_values(void) {
         "\tSystem allows " << fd_capacity_ << " number of fds" << std::endl <<
         "\tIrcServer listens to fd number " << listen_socket_ << std::endl;
 }
+
+std::size_t		IrcServer::getAvailableUserId(void){
+	if (availableUserId_ + 1 > 0)
+		return ++availableUserId_;
+	else {
+		errors_management(SERVER_CANT_CREATE_USER, "", USAGE_NOT_PRINTED);
+		return 0;
+	}
+}
+
+std::size_t		IrcServer::getAvailableChannelId(void){
+	if (availableChannelId_ + 1 > 0)
+		return ++availableChannelId_;
+	else {
+		errors_management(SERVER_CANT_CREATE_CHANNEL, "", USAGE_NOT_PRINTED);
+		return 0;
+	}
+}
+
 
 // Channel::Channel(char *name) {
 // 	strncpy(this->name, name, 50);

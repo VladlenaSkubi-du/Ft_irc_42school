@@ -17,7 +17,7 @@ class ConfigValues {
 		~ConfigValues(void);
 		const std::string& 	get_value_from_array(const char *key) const;
 		void			    save_value_by_key(const std::string& key, const std::string& value);
-		bool			    check_value_by_regexp(const size_t index, const std::string& value) const;
+		bool			    check_value_by_regexp(const std::size_t index, const std::string& value) const;
 };
 
 
