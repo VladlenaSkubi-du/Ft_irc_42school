@@ -1,4 +1,4 @@
-#include "IrcServer.hpp"
+#include "MessageServer.hpp"
 #include "debug.hpp"
 
 namespace {
@@ -23,7 +23,7 @@ namespace {
     	serv_addr.sin_port = htons(port);
     	hostent *hostname = gethostbyname(config_values.get_value_from_array("HOSTNAME").c_str());
     	if (!hostname)
-    		exit(errors_management(SERVER_NO_HOSTIP, config_values.get_value_from_array("HOSTNAME").c_str(), USAGE_NOT_PRINTED));
+    		exit(errors_management(SERVER_NO_HOSTIP, config_values.get_value_from_array("HOSTNAME"), USAGE_NOT_PRINTED));
     	inet_aton(hostname->h_name, &serv_addr.sin_addr);
     }
 
@@ -42,7 +42,15 @@ namespace {
     }
 }
 
-IrcServer::IrcServer(const ConfigValues& config_values) {
+void    MessageServer::print_server_values(void) {
+    std::cout << "IrcServer values:\n" <<
+        "\tHost IP is " << hostname_ << std::endl <<
+        "\tPort is " << port_ << std::endl <<
+        "\tSystem allows " << fd_capacity_ << " number of fds" << std::endl <<
+        "\tIrcServer listens to fd number " << listen_socket_ << std::endl;
+}
+
+MessageServer::MessageServer(const ConfigValues& config_values) {
     struct rlimit  resource_limit;
 	get_system_limits_of_fd_number(resource_limit);
 	int server_socket = create_server_socket_with_type_tcp();
@@ -52,46 +60,10 @@ IrcServer::IrcServer(const ConfigValues& config_values) {
 	make_server_socket_tcp(server_socket, serv_addr);
 	listen_server_socket(server_socket);
 
-    hostname_ = config_values.get_value_from_array("HOSTNAME").c_str();
+    hostname_ = config_values.get_value_from_array("HOSTNAME");
     port_ = ntohs(serv_addr.sin_port);
     fd_capacity_ = static_cast<std::size_t>(resource_limit.rlim_cur);
     listen_socket_ = server_socket;
-    fds_array_ = new FD[fd_capacity_];
+    fds.resize(fd_capacity_);
 	print_server_values();
 }
-
-IrcServer::~IrcServer(void) {
-    delete [] fds_array_;
-}
-
-void    IrcServer::print_server_values(void) {
-    std::cout << "IrcServer values:\n" <<
-        "\tHost IP is " << hostname_ << std::endl <<
-        "\tPort is " << port_ << std::endl <<
-        "\tSystem allows " << fd_capacity_ << " number of fds" << std::endl <<
-        "\tIrcServer listens to fd number " << listen_socket_ << std::endl;
-}
-
-std::size_t		IrcServer::getAvailableUserId(void){
-	if (availableUserId_ + 1 > 0)
-		return ++availableUserId_;
-	else {
-		errors_management(SERVER_CANT_CREATE_USER, "", USAGE_NOT_PRINTED);
-		return 0;
-	}
-}
-
-std::size_t		IrcServer::getAvailableChannelId(void){
-	if (availableChannelId_ + 1 > 0)
-		return ++availableChannelId_;
-	else {
-		errors_management(SERVER_CANT_CREATE_CHANNEL, "", USAGE_NOT_PRINTED);
-		return 0;
-	}
-}
-
-
-// Channel::Channel(char *name) {
-// 	strncpy(this->name, name, 50);
-// 	this->name[50] = '\0';
-// }

@@ -41,7 +41,8 @@ SOURCES := main.cpp \
 			error_management.cpp \
 			check_config_file.cpp \
 			ConfigValues_methods.cpp \
-			IrcServer_methods.cpp \
+			IrcServer.cpp \
+			MessageServer.cpp
 
 # ------------  DIRECTORIES  ------------------------------------------------- #
 
