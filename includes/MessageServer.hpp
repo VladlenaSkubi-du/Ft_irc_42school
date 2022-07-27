@@ -16,9 +16,9 @@ class MessageServer {
         MessageServer(const ConfigValues& config_values);
         ~MessageServer() {};
 
-        void            get_message();
-        void            send_message();
-        void			print_server_values(void);
+        void                get_message();
+        void                send_message();
+        void			    print_server_values(void);
     private:
         void                *read_func();
         void                *write_func();
