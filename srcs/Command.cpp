@@ -20,7 +20,7 @@ void	Server::execute(User &user, Message message)
 			cmd_nick(user, params);
 		else if (command == "USER")
 			cmd_user(user, params);
-		else if (!user.is_registered() && command != "NICK" && command != "USER") // 등록되지 않은 사용자
+		else if (!user.is_registered() && command != "NICK" && command != "USER")
 			user.send_err(ERR_NOTREGISTERED);
 		else if (command == "OPER")
 			cmd_oper(user, params);
@@ -53,7 +53,7 @@ void	Server::execute(User &user, Message message)
 	}
 }
 
-void	Server::cmd_pass(User &user, std::vector<std::string> &params) // o.k
+void	Server::cmd_pass(User &user, std::vector<std::string> &params)
 {
 	if (params.size() != 1)
 		user.send_err(ERR_NEEDMOREPARAMS(user.nickname(), "pass"));
