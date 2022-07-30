@@ -1,5 +1,4 @@
-#ifndef SERVER_HPP
-# define SERVER_HPP
+# pragma once
 
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -18,7 +17,7 @@
 # include "User.hpp"
 # include "Socket.hpp"
 # include "Message.hpp"
-# include "Room.hpp"
+# include "Channel.hpp"
 # include "Reply.hpp"
 
 # define TIMEOUT 1000
@@ -27,8 +26,8 @@
 # define DIM "\x1b[2m"
 # define RESET "\x1b[0m"
 # define MSG_LEN 1024
-# define SUPER_NICK "klp"
-# define SUPER_PASS "424"
+# define SUPER_NICK "default_nick"
+# define SUPER_PASS "password"
 # define SERV "ircserv"
 
 class Server
@@ -39,7 +38,7 @@ class Server
 		std::string						_password;
 		std::map<std::string, User>		_users;
 		std::map<int, std::string>		_nicks;
-		std::map<std::string, Room>		_rooms;
+		std::map<std::string, Room>		_channels;
 		Socket							*_socket;
 		std::vector<struct pollfd>		_fds;
 
@@ -79,8 +78,6 @@ class Server
 		void	cmd_ping(User &user, const Message &msg);
 		void	cmd_pong(User &user, const Message &msg);
 
-		void							send_motd(User user);
-		void							send_pong(User &user, std::string msg);
+		void	send_motd(User user);
+		void	send_pong(User &user, std::string msg);
 };
-
-#endif

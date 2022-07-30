@@ -1,5 +1,4 @@
-#ifndef CHANNEL_HPP
-# define CHANNEL_HPP
+# pragma once
 
 # include <string>
 # include <set>
@@ -37,4 +36,3 @@ public:
 	std::string	user_list(void) const;
 };
 
-#endif

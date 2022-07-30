@@ -72,7 +72,7 @@ std::string	Server::wait_list()
 	{
 		for (std::map<std::string, User>::iterator itr = _users.begin(); itr != _users.end(); ++itr)
 		{
-			if (_users[itr->first].rooms().size() == 0 && _users[itr->first].nickname().size() != 0)
+			if (_users[itr->first].channels().size() == 0 && _users[itr->first].nickname().size() != 0)
 				ss << _users[itr->first].nickname() + " ";
 		}
 	}
@@ -112,7 +112,7 @@ void	Server::chat(int fd)
 
 bool	Server::is_room(std::string name)
 {
-	return (_rooms.find(name) != _rooms.end());
+	return (_channels.find(name) != _channels.end());
 }
 
 bool	Server::is_user(std::string name)

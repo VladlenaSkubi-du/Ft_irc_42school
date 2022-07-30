@@ -27,7 +27,20 @@ int main(int argc, char **argv)
 		server.start();
 		return 0;
 	}
+	else if (argc == 4)
+	{
+		std::stringstream ss;
+		ss.str("");
+		ss << argv[2];
+		int num;
+		ss >> num;
+		std::string password = argv[3];
+
+		Server server(num, password);
+		server.start();
+		return 0;
+	}
 	else
 		std::cout << "[ERROR] ircserv: bad arguments" << std::endl;
-	return -1;
+	return 1;
 }

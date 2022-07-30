@@ -1,5 +1,4 @@
-# ifndef MESSAGE_HPP
-#define MESSAGE_HPP
+# pragma once
 
 # include <iostream>
 # include <string>
@@ -27,5 +26,3 @@ class Message
 		std::string					command() const;
 		std::vector<std::string>	params() const;
 };
-
-#endif

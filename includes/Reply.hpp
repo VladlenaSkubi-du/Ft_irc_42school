@@ -1,8 +1,7 @@
-#ifndef REPLY_HPP
-# define REPLY_HPP
+# pragma once
 
 #include <sstream>
-# include "Server.hpp"
+#include "Server.hpp"
 
 /*
  *  Error Replies
@@ -57,4 +56,3 @@
 # define RPL_ENDOFMOTD(nick)						":ircserv 376 " + nick + " :End of MOTD command\n"
 # define RPL_YOUREOPER(nick)						":ircserv 381 " + nick + " :You are now an IRC operator\n"
 
-#endif

@@ -1,4 +1,4 @@
-#include "Room.hpp"
+#include "Channel.hpp"
 
 using std::string;
 using std::set;
@@ -49,7 +49,7 @@ void Room::send_msg(map<string, User> &users, string msg)
 void Room::join(User &u)
 {
 	_users.insert(u.nickname());
-	u.rooms().insert(_name);
+	u.channels().insert(_name);
 }
 
 void Room::part(User& u)
@@ -57,7 +57,7 @@ void Room::part(User& u)
 	if (!isin(u.nickname()))
 		return ;
 	_users.erase(_users.find(u.nickname()));
-	u.rooms().erase(u.rooms().find(_name));
+	u.channels().erase(u.channels().find(_name));
 }
 
 void Room::set_operator(std::string name)

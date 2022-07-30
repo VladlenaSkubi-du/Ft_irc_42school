@@ -22,7 +22,7 @@ SOURCES := main.cpp \
 			Socket.cpp \
 			Message.cpp \
 			Command.cpp \
-			Room.cpp \
+			Channel.cpp \
 			Reply.cpp
 
 # ------------  DIRECTORIES  ------------------------------------------------- #

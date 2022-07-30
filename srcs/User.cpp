@@ -198,9 +198,9 @@ void	User::set_admin(bool admin)
 	_is_admin = admin;
 }
 
-std::set<std::string>& User::rooms(void)
+std::set<std::string>& User::channels(void)
 {
-	return _rooms;
+	return _channels;
 }
 
 void User::send_msg(std::string msg, int flag)

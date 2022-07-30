@@ -1,5 +1,4 @@
-#ifndef USER_HPP
-# define USER_HPP
+# pragma once
 
 # include <set>
 # include <iostream>
@@ -18,7 +17,7 @@ class User
 		std::string	_nickname;
 		std::string	_username;
 		std::string	_realname;
-		std::set<std::string> _rooms;
+		std::set<std::string> _channels;
 
 		time_t		_last_message_time;
 		time_t		_message_timeout;
@@ -60,9 +59,8 @@ class User
 		time_t		message_timeout() const;
 		bool		is_admin() const;
 
-		std::set<std::string>& rooms(void);
+		std::set<std::string>& channels(void);
 		void	send_msg(std::string msg, int flag=0);
 		void	send_err(std::string msg, int flag=0);
 };
 
-#endif

@@ -153,8 +153,6 @@ void	Server::cmd_mode(User &user, std::vector<std::string> &params)
 		else
 			_users[params[1]].set_admin(false);
 	}
-	else
-		user.send_err(ERR_NEEDMOREPARAMS(user.nickname(), "MODE"));
 }
 
 void	Server::cmd_join(User &user, std::vector<std::string> &params)
@@ -165,26 +163,26 @@ void	Server::cmd_join(User &user, std::vector<std::string> &params)
 		user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), params[0]));
 	if (!is_room(params[0]))
 	{
-		_rooms[params[0]] = Room(params[0]);
-		_rooms[params[0]].set_operator(user.nickname());
-		_rooms[params[0]].join(user);
+		_channels[params[0]] = Room(params[0]);
+		_channels[params[0]].set_operator(user.nickname());
+		_channels[params[0]].join(user);
 		user.send_msg(user.fullname() + " JOIN " + params[0] + "\n");
-		user.send_msg(RPL_NOTOPIC(user.nickname(), _rooms[params[0]].name()));
-		user.send_msg(RPL_NAMREPLY(user.nickname(), _rooms[params[0]].name(), _rooms[params[0]].user_list()));
-		user.send_msg(RPL_ENDOFNAMES(user.nickname(), _rooms[params[0]].name()));
+		user.send_msg(RPL_NOTOPIC(user.nickname(), _channels[params[0]].name()));
+		user.send_msg(RPL_NAMREPLY(user.nickname(), _channels[params[0]].name(), _channels[params[0]].user_list()));
+		user.send_msg(RPL_ENDOFNAMES(user.nickname(), _channels[params[0]].name()));
 	}
 	else
 	{
-		if (_rooms[params[0]].users().size() > 10)
-			user.send_err(ERR_CHANNELISFULL(user.nickname(), _rooms[params[0]].name()));
-		_rooms[params[0]].join(user);
-		_rooms[params[0]].send_msg(_users, user.fullname() + " JOIN " + params[0] + "\n");
-		if (_rooms[params[0]].topic() == "")
-			user.send_msg(RPL_NOTOPIC(user.nickname(), _rooms[params[0]].name()));
+		if (_channels[params[0]].users().size() > 10)
+			user.send_err(ERR_CHANNELISFULL(user.nickname(), _channels[params[0]].name()));
+		_channels[params[0]].join(user);
+		_channels[params[0]].send_msg(_users, user.fullname() + " JOIN " + params[0] + "\n");
+		if (_channels[params[0]].topic() == "")
+			user.send_msg(RPL_NOTOPIC(user.nickname(), _channels[params[0]].name()));
 		else
-			user.send_msg(RPL_TOPIC(user.nickname(), _rooms[params[0]].name(), _rooms[params[0]].topic()));
-		user.send_msg(RPL_NAMREPLY(user.nickname(), _rooms[params[0]].name(), _rooms[params[0]].user_list()));
-		user.send_msg(RPL_ENDOFNAMES(user.nickname(), _rooms[params[0]].name()));
+			user.send_msg(RPL_TOPIC(user.nickname(), _channels[params[0]].name(), _channels[params[0]].topic()));
+		user.send_msg(RPL_NAMREPLY(user.nickname(), _channels[params[0]].name(), _channels[params[0]].user_list()));
+		user.send_msg(RPL_ENDOFNAMES(user.nickname(), _channels[params[0]].name()));
 	}
 }
 
@@ -193,7 +191,7 @@ void	Server::cmd_list(User &user, std::vector<std::string> &params)
 	user.send_msg(RPL_LISTSTART(user.nickname()));
 	if (params.size() == 0)
 	{
-		for (std::map<std::string, Room>::iterator it = _rooms.begin(); it != _rooms.end(); it++)
+		for (std::map<std::string, Room>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		{
 			std::stringstream	tmp;
 			tmp.str("");
@@ -203,17 +201,17 @@ void	Server::cmd_list(User &user, std::vector<std::string> &params)
 	}
 	else if (params.size() == 1)
 	{
-		std::vector<std::string>	rooms = split(params[0], ',');
-		for(unsigned int i = 0; i < rooms.size(); i++)
+		std::vector<std::string>	channels = split(params[0], ',');
+		for(unsigned int i = 0; i < channels.size(); i++)
 		{
 			if (!is_room(params[0]))
-				user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), rooms[i]));
+				user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), channels[i]));
 			else
 			{
 				std::stringstream	tmp;
 				tmp.str("");
-				tmp << _rooms[params[0]].users().size();
-				user.send_msg(RPL_LIST(user.nickname(), _rooms[params[0]].name(), tmp.str(), _rooms[params[0]].topic()));
+				tmp << _channels[params[0]].users().size();
+				user.send_msg(RPL_LIST(user.nickname(), _channels[params[0]].name(), tmp.str(), _channels[params[0]].topic()));
 			}
 		}
 	}
@@ -227,19 +225,19 @@ void	Server::cmd_kick(User &user, std::vector<std::string> &params)
 
 	if (!is_room(params[0]))
 		user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), params[0]));
-	if (!_rooms[params[0]].is_operator(user.nickname()))
+	if (!_channels[params[0]].is_operator(user.nickname()))
 		user.send_err(ERR_NOPRIVILEGES(user.nickname()));
-	if (!_rooms[params[0]].isin(user.nickname()))
-		user.send_err(ERR_NOTONCHANNEL(user.nickname(), _rooms[params[0]].name()));
-	if (_rooms[params[0]].isin(params[1]) == false)
+	if (!_channels[params[0]].isin(user.nickname()))
+		user.send_err(ERR_NOTONCHANNEL(user.nickname(), _channels[params[0]].name()));
+	if (_channels[params[0]].isin(params[1]) == false)
 		user.send_err(ERR_NOSUCHNICK(user.nickname()));
 
-	_rooms[params[0]].send_msg(_users, user.fullname() + " KICK " + params[0] + " " + params[1] + "\n");
-	_rooms[params[0]].part(_users[params[1]]);
-	if (_rooms[params[0]].users().size() == 0)
-		_rooms.erase(params[0]);
+	_channels[params[0]].send_msg(_users, user.fullname() + " KICK " + params[0] + " " + params[1] + "\n");
+	_channels[params[0]].part(_users[params[1]]);
+	if (_channels[params[0]].users().size() == 0)
+		_channels.erase(params[0]);
 	else
-		_rooms[params[0]].set_operator(*(_rooms[params[0]].users().begin()));
+		_channels[params[0]].set_operator(*(_channels[params[0]].users().begin()));
 }
 
 void	Server::cmd_part(User &user, std::vector<std::string> &params)
@@ -248,15 +246,15 @@ void	Server::cmd_part(User &user, std::vector<std::string> &params)
 		user.send_err(ERR_NEEDMOREPARAMS(user.nickname(), "PART"));
 	if(!is_room(params[0]))
 		user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), params[0]));
-	if(!_rooms[params[0]].isin(user.nickname()))
+	if(!_channels[params[0]].isin(user.nickname()))
 		user.send_err(ERR_NOTONCHANNEL(user.nickname(), params[0]));
 
-	_rooms[params[0]].send_msg(_users, user.fullname() + " PART " + _rooms[params[0]].name() + "\n");
-	_rooms[params[0]].part(user);
-	if (_rooms[params[0]].users().size() == 0)
-		_rooms.erase(params[0]);
+	_channels[params[0]].send_msg(_users, user.fullname() + " PART " + _channels[params[0]].name() + "\n");
+	_channels[params[0]].part(user);
+	if (_channels[params[0]].users().size() == 0)
+		_channels.erase(params[0]);
 	else
-		_rooms[params[0]].set_operator(*(_rooms[params[0]].users().begin()));
+		_channels[params[0]].set_operator(*(_channels[params[0]].users().begin()));
 }
 
 void	Server::cmd_privmsg(User &user, std::vector<std::string> &params)
@@ -270,7 +268,7 @@ void	Server::cmd_privmsg(User &user, std::vector<std::string> &params)
 	{
 		if (!is_room(params[0]))
 			user.send_err(ERR_NOTONCHANNEL(user.nickname(), params[0]));
-		_rooms[params[0]].send_msg(_users, user.nickname(), user.fullname() + " PRIVMSG " + params[0] + " :" + params[1] + "\n");
+		_channels[params[0]].send_msg(_users, user.nickname(), user.fullname() + " PRIVMSG " + params[0] + " :" + params[1] + "\n");
 
 	}
 	else
@@ -292,7 +290,7 @@ void	Server::cmd_notice(User &user, std::vector<std::string> &params)
 	{
 		if (!is_room(params[0]))
 			return ;
-		_rooms[params[0]].send_msg(_users, user.fullname() + user.nickname() + " NOTICE " + params[0] + " :" + params[1] + "\n");
+		_channels[params[0]].send_msg(_users, user.fullname() + user.nickname() + " NOTICE " + params[0] + " :" + params[1] + "\n");
 
 	}
 	else
@@ -311,7 +309,7 @@ void	Server::cmd_names(User &user, std::vector<std::string> &params)
 		user.send_err(ERR_NEEDMOREPARAMS(user.nickname(), "NAMES"));
 	else if (params.size() == 0)
 	{
-		for (std::map<std::string, Room>::iterator it = _rooms.begin(); it != _rooms.end(); it++)
+		for (std::map<std::string, Room>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		{
 			user.send_msg(RPL_NAMREPLY(user.nickname(), it->second.name(), it->second.user_list()));
 			user.send_msg(RPL_ENDOFNAMES(user.nickname(), it->second.name()));
@@ -325,8 +323,8 @@ void	Server::cmd_names(User &user, std::vector<std::string> &params)
 			user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), params[0]));
 		else
 		{
-			user.send_msg(RPL_NAMREPLY(user.nickname(), _rooms[params[0]].name(), _rooms[params[0]].user_list()));
-			user.send_msg(RPL_ENDOFNAMES(user.nickname(), _rooms[params[0]].name()));
+			user.send_msg(RPL_NAMREPLY(user.nickname(), _channels[params[0]].name(), _channels[params[0]].user_list()));
+			user.send_msg(RPL_ENDOFNAMES(user.nickname(), _channels[params[0]].name()));
 		}
 	}
 }
@@ -339,33 +337,33 @@ void	Server::cmd_topic(User &user, std::vector<std::string> &params)
 		user.send_err(ERR_NOSUCHCHANNEL(user.nickname(), params[0]));
 	if (params.size() == 1)
 	{
-		if (_rooms[params[0]].topic().empty())
+		if (_channels[params[0]].topic().empty())
 			user.send_msg(RPL_NOTOPIC(user.nickname(), params[0]));
 		else
-			user.send_msg(RPL_TOPIC(user.nickname(), params[0], _rooms[params[0]].topic()));
+			user.send_msg(RPL_TOPIC(user.nickname(), params[0], _channels[params[0]].topic()));
 	}
 	else
 	{
-		if (!_rooms[params[0]].isin(user.nickname()))
+		if (!_channels[params[0]].isin(user.nickname()))
 			user.send_err(ERR_NOTONCHANNEL(user.nickname(), params[0]));
-		if (!_rooms[params[0]].is_operator(user.nickname()))
+		if (!_channels[params[0]].is_operator(user.nickname()))
 			user.send_err(ERR_CHANOPRIVSNEEDED(user.nickname(), params[0]));
-		_rooms[params[0]].set_topic(params[1]);
-		_rooms[params[0]].send_msg(_users, RPL_SETTOPIC(params[0], params[1]));
-		_rooms[params[0]].send_msg(_users, RPL_TOPIC(user.nickname(), params[0], _rooms[params[0]].topic()));
+		_channels[params[0]].set_topic(params[1]);
+		_channels[params[0]].send_msg(_users, RPL_SETTOPIC(params[0], params[1]));
+		_channels[params[0]].send_msg(_users, RPL_TOPIC(user.nickname(), params[0], _channels[params[0]].topic()));
 	}
 }
 
 void	Server::quit(User &user)
 {
-	while (!user.rooms().empty())
+	while (!user.channels().empty())
 	{
-		std::string name = *user.rooms().begin();
-		_rooms[name].part(user);
-		if (_rooms[name].users().size() == 0)
-			_rooms.erase(name);
+		std::string name = *user.channels().begin();
+		_channels[name].part(user);
+		if (_channels[name].users().size() == 0)
+			_channels.erase(name);
 		else
-			_rooms[name].set_operator(*(_rooms[name].users().begin()));
+			_channels[name].set_operator(*(_channels[name].users().begin()));
 	}
 
 
