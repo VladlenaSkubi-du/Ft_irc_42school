@@ -5,44 +5,25 @@ RM=/bin/rm -rf
 PRINTF=printf
 MKDIR=mkdir -p
 
-
 # ------------  PROJECT  ----------------------------------------------------- #
 
 NAME :=	ircserv
 
 # ------------  FLAGS  ------------------------------------------------------- #
 
-FLAGS := -Wall# -Wextra -Werror
+FLAGS := -Wall -Wextra -Werror
 FLAGS += -std=c++98
 
 # ------------  SOURCE FILES  ------------------------------------------------ #
 
-# VALIDATOR_DIR := validator
-# VALIDATOR := \
-# 			$(VALIDATOR_DIR)/val_start.c \
-# 			$(VALIDATOR_DIR)/val_errors.c \
-# 			$(VALIDATOR_DIR)/val_help_funcs.c \
-# 			$(VALIDATOR_DIR)/val_arguments.c \
-# 			$(VALIDATOR_DIR)/val_first_filter.c \
-# 			$(VALIDATOR_DIR)/val_second_filter.c \
-# 			$(VALIDATOR_DIR)/val_second_filter_rooms.c \
-# 			$(VALIDATOR_DIR)/val_save_rooms.c \
-# 			$(VALIDATOR_DIR)/val_second_filter_links.c
-
-# ALGORITHM_DIR := algorithm
-# ALGORITHM := \
-# 			$(ALGORITHM_DIR)/al_bellman_ford.c\
-# 			$(ALGORITHM_DIR)/al_suurbale.c\
-# 			$(ALGORITHM_DIR)/al_reverse_path.c\
-# 			$(ALGORITHM_DIR)/al_edges.c\
-# 			$(ALGORITHM_DIR)/al_paths.c\
-
 SOURCES := main.cpp \
-			error_management.cpp \
-			check_config_file.cpp \
-			ConfigValues_methods.cpp \
-			IrcServer.cpp \
-			MessageServer.cpp
+			Server.cpp \
+			User.cpp \
+			Socket.cpp \
+			Message.cpp \
+			Command.cpp \
+			Room.cpp \
+			Reply.cpp
 
 # ------------  DIRECTORIES  ------------------------------------------------- #
 

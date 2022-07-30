@@ -1,27 +1,33 @@
-#include "IrcServer.hpp"
+# include "Server.hpp"
 
-#define SERVER_WORKS 1
-#define SERVER_TERMINATED -1
+int main(int argc, char **argv)
+{
+	if (argc == 2)
+	{
+		std::stringstream ss;
+		ss.str("");
+		ss << argv[1];
+		int num;
+		ss >> num;
 
-// static bool	server_state;
+		Server server(num);
+		server.start();
+		return 0;
+	}
+	else if (argc == 3)
+	{
+		std::stringstream ss;
+		ss.str("");
+		ss << argv[1];
+		int num;
+		ss >> num;
+		std::string password = argv[2];
 
-// static void terminate_server(int signal)
-// {
-// 	if (signal == SIGINT)
-// 		server_state = SERVER_TERMINATED;
-// }
-
-int main(int argc, char *argv[]) {
-	ConfigValues config_values;
-	check_config_file(argc, argv, config_values);
-	IrcServer irc_server(config_values);
-
-	// int	server_state = SERVER_WORKS;
-	// signal(SIGINT, terminate_server);
-	// while (server_state == SERVER_WORKS) {
-	// 	accept_client(irc_server);
-		
-	// }
-	// если получаем sigint, нужно сперва проверить, все ли мы полученное отправили клиентам, далее отправить SQUIT: Also servers can generate SQUIT messages on error conditions.
-	return (0);
+		Server server(num, password);
+		server.start();
+		return 0;
+	}
+	else
+		std::cout << "[ERROR] ircserv: bad arguments" << std::endl;
+	return -1;
 }
